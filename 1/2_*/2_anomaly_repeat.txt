@@ -1,0 +1,24 @@
+BEGIN ISOLATION LEVEL READ COMMITTED;
+SELECT price FROM products WHERE product_id = '8149336b-96c9-4d36-9763-5f02900d2d20';
+BEGIN
+ price  
+--------
+ 368.50
+
+----------------------------------------------------
+
+BEGIN;
+UPDATE products SET price = 150 WHERE product_id = '8149336b-96c9-4d36-9763-5f02900d2d20';
+COMMIT;
+WARNING:  there is already a transaction in progress
+BEGIN
+UPDATE 1
+COMMIT
+
+----------------------------------------------------
+
+SELECT price FROM products WHERE product_id = '8149336b-96c9-4d36-9763-5f02900d2d20';
+COMMIT;
+ price  
+--------
+ 150.00

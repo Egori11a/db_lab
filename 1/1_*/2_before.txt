@@ -1,0 +1,32 @@
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..9326.67 rows=5 width=60) (actual time=229.255..230.905 rows=0 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on users  (cost=0.00..8326.17 rows=2 width=60) (actual time=225.826..225.827 rows=0 loops=3)
+         Filter: ((username)::text = 'john_doe'::text)
+         Rows Removed by Filter: 166667
+ Planning Time: 0.307 ms
+ Execution Time: 230.935 ms
+(8 rows)
+
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..63611.70 rows=12 width=96) (actual time=975.353..977.405 rows=0 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on reviews  (cost=0.00..62610.50 rows=5 width=96) (actual time=973.108..973.108 rows=0 loops=3)
+         Filter: (to_tsvector('russian'::regconfig, comment) @@ '''качествен'' & ''товар'''::tsquery)
+         Rows Removed by Filter: 166667
+ Planning Time: 4.436 ms
+ Execution Time: 977.422 ms
+(8 rows)
+
+                                                                      QUERY PLAN                                                                      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..25989.00 rows=187700 width=55) (actual time=0.014..59.589 rows=189424 loops=1)
+   Filter: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
+   Rows Removed by Filter: 810576
+ Planning Time: 0.091 ms
+ Execution Time: 64.108 ms
+(5 rows)

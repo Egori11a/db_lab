@@ -1,0 +1,28 @@
+                                                        QUERY PLAN                                                         
+---------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on users  (cost=4.46..24.08 rows=5 width=60) (actual time=0.021..0.021 rows=0 loops=1)
+   Recheck Cond: ((username)::text = 'john_doe'::text)
+   ->  Bitmap Index Scan on idx_users_username  (cost=0.00..4.46 rows=5 width=0) (actual time=0.017..0.017 rows=0 loops=1)
+         Index Cond: ((username)::text = 'john_doe'::text)
+ Planning Time: 0.382 ms
+ Execution Time: 0.053 ms
+(6 rows)
+
+                                                            QUERY PLAN                                                            
+----------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on reviews  (cost=21.30..71.04 rows=12 width=96) (actual time=0.038..0.038 rows=0 loops=1)
+   Recheck Cond: (to_tsvector('russian'::regconfig, comment) @@ '''качествен'' & ''товар'''::tsquery)
+   ->  Bitmap Index Scan on idx_reviews_comment_gin  (cost=0.00..21.29 rows=12 width=0) (actual time=0.034..0.034 rows=0 loops=1)
+         Index Cond: (to_tsvector('russian'::regconfig, comment) @@ '''качествен'' & ''товар'''::tsquery)
+ Planning Time: 1.415 ms
+ Execution Time: 0.070 ms
+(6 rows)
+
+                                                                      QUERY PLAN                                                                      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..25989.00 rows=187700 width=55) (actual time=0.012..57.669 rows=189424 loops=1)
+   Filter: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
+   Rows Removed by Filter: 810576
+ Planning Time: 0.119 ms
+ Execution Time: 62.261 ms
+(5 rows)

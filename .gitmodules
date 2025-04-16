@@ -1,0 +1,3 @@
+[submodule "1/3_*/pg_bigm"]
+	path = 1/3_*/pg_bigm
+	url = https://github.com/pg_bigm/pg_bigm.git

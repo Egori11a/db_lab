@@ -1,0 +1,41 @@
+BEGIN ISOLATION LEVEL READ COMMITTED;
+SELECT COUNT(*) 
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+WHERE c.name = 'Electronics';
+BEGIN
+ count 
+-------
+     2
+(1 row)
+
+-----------------------------------------------------------
+
+BEGIN;
+-- Вставка еще одного товара
+INSERT INTO products (name, category_id, price, stock, manufacturer)
+SELECT 'Headphones', category_id, 149.99, 20, 'Sony'
+FROM categories WHERE name = 'Electronics';
+
+COMMIT;
+BEGIN
+INSERT 0 1
+COMMIT
+
+-------------------------------------------------------------------------
+
+-- Повторный запрос
+SELECT COUNT(*) 
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+WHERE c.name = 'Electronics';
+-- Теперь результат изменится (увеличится на 1) - это фантомное чтение
+-- В READ COMMITTED новые строки, добавленные другими транзакциями, становятся видимыми
+
+COMMIT;
+ count 
+-------
+     3
+(1 row)
+
+COMMIT
