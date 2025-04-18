@@ -18,11 +18,14 @@
  Execution Time: 0.070 ms
 (6 rows)
 
-                                                                      QUERY PLAN                                                                      
-------------------------------------------------------------------------------------------------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..25989.00 rows=187700 width=55) (actual time=0.012..57.669 rows=189424 loops=1)
-   Filter: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
-   Rows Removed by Filter: 810576
- Planning Time: 0.119 ms
- Execution Time: 62.261 ms
-(5 rows)
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=61.68..26050.68 rows=187700 width=55) (actual time=0.772..136.718 rows=189424 loops=1)
+   Recheck Cond: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
+   Rows Removed by Index Recheck: 810578
+   Heap Blocks: lossy=10989
+   ->  Bitmap Index Scan on idx_orders_order_date_brin  (cost=0.00..14.75 rows=1000000 width=0) (actual time=0.751..0.751 rows=109890 loops=1)
+         Index Cond: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
+ Planning Time: 0.117 ms
+ Execution Time: 141.476 ms
+(8 rows)
