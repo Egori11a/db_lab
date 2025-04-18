@@ -24,9 +24,9 @@
 
                                                                       QUERY PLAN                                                                      
 ------------------------------------------------------------------------------------------------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..25989.00 rows=187700 width=55) (actual time=0.014..59.589 rows=189424 loops=1)
+ Seq Scan on orders  (cost=0.00..25989.00 rows=187700 width=55) (actual time=0.685..335.247 rows=189424 loops=1)
    Filter: ((order_date >= '2024-01-01 00:00:00'::timestamp without time zone) AND (order_date < '2025-01-01 00:00:00'::timestamp without time zone))
-   Rows Removed by Filter: 810576
- Planning Time: 0.091 ms
- Execution Time: 64.108 ms
+   Rows Removed by Filter: 810578
+ Planning Time: 1.738 ms
+ Execution Time: 339.989 ms
 (5 rows)
