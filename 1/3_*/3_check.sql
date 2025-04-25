@@ -21,19 +21,19 @@ CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gi
 
 -- Тесты для малых, средних и больших строк, похожих и непохожих
 
--- Тест 1: Короткие строки (похожее)
+-- Тест 1: Короткие строки
 EXPLAIN ANALYZE
 SELECT username FROM users WHERE username % 'john_doe';
 
--- Тест 2: Средние строки (похожее)
+-- Тест 2: Средние строки
 EXPLAIN ANALYZE
 SELECT name FROM products WHERE name % 'iPhone 14';
 
--- Тест 3: Длинные строки (похожее)
+-- Тест 3: Длинные строки
 EXPLAIN ANALYZE
 SELECT name FROM products WHERE name % 'VeryVeryLongProductNameToTestBigmAndTrgmMatching';
 
--- Тест 4: Очень похожие строки (непохожие)
+-- Тест 4: Очень похожие строки
 EXPLAIN ANALYZE
 SELECT username FROM users WHERE username % 'jon_doe';
 
