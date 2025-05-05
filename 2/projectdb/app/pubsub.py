@@ -6,10 +6,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 async def publish_event(channel: str, message: dict):
+    """
+    Публикует событие в указанный Redis-канал.
+    """
     r = await get_redis()
     await r.publish(channel, json.dumps(message))
 
 async def listen_to_orders():
+    """
+    Подписывается на Redis-канал и обрабатывает входящие сообщения.
+    Эта функция запускается при старте приложения.
+    Все события будут здесь ловиться.
+    Логируется информация о заказах.
+    """
     r = await get_redis()
     pubsub = r.pubsub()
     await pubsub.subscribe("orders")
