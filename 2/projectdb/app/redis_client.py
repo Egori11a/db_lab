@@ -4,6 +4,10 @@ import os
 redis = None
 
 async def init_redis():
+    """
+    Создаёт глобальное подключение к Redis, используя URL из переменных окружения.
+    Подключение сохраняется в переменной redis для повторного использования.
+    """
     global redis
     redis = redis_lib.from_url(
         os.getenv("REDIS_URL", "redis://localhost"),
@@ -11,4 +15,7 @@ async def init_redis():
     )
 
 async def get_redis():
+    """
+    Используется в любом месте приложения, где нужно работать с Redis.
+    """
     return redis
