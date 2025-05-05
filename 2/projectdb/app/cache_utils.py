@@ -44,17 +44,30 @@ def make_json_serializable(obj):
     return obj
 
 async def get_or_cache_json(key: str, fetch_fn, ttl: int = DEFAULT_TTL):
+    """
+    Универсальная функция получения данных из кеша или из БД:
+    - Пытается получить значение по ключу `key` из Redis.
+    - Если значение найдено — возвращает его.
+    - Если нет — вызывает функцию `fetch_fn`, сохраняет результат в Redis с TTL.
+    """
     r = await get_redis()
     cached = await r.get(key)
     if cached:
         return json.loads(cached)
 
     data = await fetch_fn()
+
     serializable_data = make_json_serializable(data)
 
+    # Кешируем результат в Redis
     await r.set(key, json.dumps(serializable_data), ex=ttl)
     return serializable_data
 
+
 async def invalidate_cache(key: str):
+    """
+    Удаляет ключ из кеша Redis.
+    Используется при обновлении данных (например, категорий, товаров).
+    """
     r = await get_redis()
     await r.delete(key)
