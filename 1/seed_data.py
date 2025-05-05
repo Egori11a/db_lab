@@ -6,10 +6,8 @@ from tqdm import tqdm
 from dotenv import load_dotenv
 import os
 
-# Загружаем переменные из .env
 load_dotenv()
 
-# Читаем из .env
 DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
@@ -19,7 +17,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 fake = Faker()
 
-# Настройки подключения к базе
 conn = psycopg2.connect(
     dbname=DB_NAME,
     user=DB_USER,
@@ -30,7 +27,6 @@ conn = psycopg2.connect(
 conn.autocommit = True
 cur = conn.cursor()
 
-# Число записей
 NUM_USERS = 500_000
 NUM_CATEGORIES = 50
 NUM_PRODUCTS = 500_000
@@ -40,7 +36,6 @@ NUM_SUPPORT_SESSIONS = 100_000
 NUM_MESSAGES_PER_SESSION = 5
 
 def save_secret_key():
-    # Для примера сохраним SECRET_KEY в таблицу настроек приложения
     cur.execute("""
         CREATE TABLE IF NOT EXISTS app_settings (
             key VARCHAR PRIMARY KEY,
@@ -121,12 +116,12 @@ def create_orders(user_ids):
 def create_order_items(order_ids, product_ids):
     order_items = []
     for order_id in tqdm(order_ids, desc="Inserting order_items"):
-        products_in_order = set()  # Множество для хранения уникальных product_id
-        for _ in range(random.randint(1, 5)):  # Случайное количество товаров в заказе
+        products_in_order = set()
+        for _ in range(random.randint(1, 5)):
             product_id = random.choice(product_ids)
-            while product_id in products_in_order:  # Проверяем, чтобы товар не повторялся
+            while product_id in products_in_order:
                 product_id = random.choice(product_ids)
-            products_in_order.add(product_id)  # Добавляем товар в заказ
+            products_in_order.add(product_id)
             quantity = random.randint(1, 10)
             price = round(random.uniform(5.0, 500.0), 2)
             order_items.append((order_id, product_id, quantity, price))

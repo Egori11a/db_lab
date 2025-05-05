@@ -97,3 +97,4 @@ FROM users
 WHERE username % 'completelydifferentusername'
 ORDER BY sim DESC
 LIMIT 5;
+LIMIT 5;
