@@ -201,7 +201,13 @@ async def logout():
     Выход из системы.
     """
     logger.info("Пользователь вышел из системы.")
+    token = session.get("auth_token")
+
+    if token:
+        await delete_token(token)  # Удаляем токен из Redis
+
     session.pop("user_id", None)
+    session.pop("auth_token", None)
     await flash("Вы вышли из системы.", "info")
     return redirect(url_for("main.login"))
 
