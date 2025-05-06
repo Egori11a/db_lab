@@ -50,17 +50,23 @@ async def get_or_cache_json(key: str, fetch_fn, ttl: int = DEFAULT_TTL):
     - Если значение найдено — возвращает его.
     - Если нет — вызывает функцию `fetch_fn`, сохраняет результат в Redis с TTL.
     """
-    r = await get_redis()
-    cached = await r.get(key)
-    if cached:
-        return json.loads(cached)
+    try:
+        r = await get_redis()
+        cached = await r.get(key)
+        if cached:
+            return json.loads(cached)
+    except Exception as e:
+        print(f"⚠️ Redis недоступен (get): {e}")
 
     data = await fetch_fn()
-
     serializable_data = make_json_serializable(data)
 
-    # Кешируем результат в Redis
-    await r.set(key, json.dumps(serializable_data), ex=ttl)
+    try:
+        r = await get_redis()
+        await r.set(key, json.dumps(serializable_data), ex=ttl)
+    except Exception as e:
+        print(f"⚠️ Redis недоступен (set): {e}")
+
     return serializable_data
 
 
